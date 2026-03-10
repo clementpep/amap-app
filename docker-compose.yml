@@ -9,11 +9,16 @@ services:
         SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
     image: amap-web:latest
     restart: unless-stopped
-    # Routing is handled by Dokploy's built-in Traefik — configure domain
-    # and container port (80) in Dokploy UI > Domains tab.
-    # No manual labels or port bindings needed.
+    # Must be on dokploy-network so Traefik can reach the container.
+    # Domain routing is configured in Dokploy UI > Domains tab (port 80).
+    networks:
+      - dokploy-network
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost/index.html"]
       interval: 30s
       timeout: 5s
       retries: 3
+
+networks:
+  dokploy-network:
+    external: true
