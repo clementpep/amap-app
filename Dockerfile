@@ -12,6 +12,10 @@ RUN flutter pub get
 # Copy source
 COPY . .
 
+# Enable web platform support (idempotent: won't overwrite existing files)
+# Required because the repo doesn't include generated web/ binary assets
+RUN flutter create . --platforms web --project-name amap_app
+
 # Build-time secrets injected as Docker build args
 ARG SUPABASE_URL
 ARG SUPABASE_ANON_KEY
