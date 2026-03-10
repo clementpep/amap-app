@@ -1,0 +1,56 @@
+# ─────────────────────────────────────────────────────────────
+# Stage 1: Build Flutter Web DEMO (without Supabase)
+# ─────────────────────────────────────────────────────────────
+FROM ghcr.io/cirruslabs/flutter:stable AS builder
+
+WORKDIR /app
+
+# Cache pub dependencies separately from source
+COPY pubspec.yaml pubspec.lock* ./
+RUN flutter pub get
+
+# Copy source
+COPY . .
+
+# Download Poppins font files (not committed to git — binary assets)
+# Source: Google Fonts open-source repository (OFL license)
+RUN mkdir -p assets/fonts && \
+    curl -fsSL -o assets/fonts/Poppins-Regular.ttf \
+      "https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-Regular.ttf" && \
+    curl -fsSL -o assets/fonts/Poppins-Medium.ttf \
+      "https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-Medium.ttf" && \
+    curl -fsSL -o assets/fonts/Poppins-SemiBold.ttf \
+      "https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-SemiBold.ttf" && \
+    curl -fsSL -o assets/fonts/Poppins-Bold.ttf \
+      "https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-Bold.ttf"
+
+# Enable web platform support (idempotent: won't overwrite existing files)
+# Required because the repo doesn't include generated web/ binary assets
+RUN flutter create . --platforms web --project-name amap_app
+
+# DEMO: Use main_demo.dart instead of main.dart
+RUN cp lib/main_demo.dart lib/main.dart
+
+# Build web WITHOUT Supabase vars (demo mode)
+RUN flutter build web --release
+
+# ─────────────────────────────────────────────────────────────
+# Stage 2: Serve with Nginx (Alpine — ~25 MB)
+# ─────────────────────────────────────────────────────────────
+FROM nginx:1.27-alpine
+
+# Remove default config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy custom Nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy the built web app
+COPY --from=builder /app/build/web /usr/share/nginx/html
+
+EXPOSE 80
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget -qO- http://127.0.0.1/index.html || exit 1
+
+CMD ["nginx", "-g", "daemon off;"]

@@ -24,24 +24,39 @@ part 'app_router.g.dart';
 
 @riverpod
 GoRouter appRouter(Ref ref) {
-  final authState = ref.watch(authStateProvider);
+  try {
+    final authState = ref.watch(authStateProvider);
 
-  return GoRouter(
-    initialLocation: '/deliveries',
-    debugLogDiagnostics: false,
-    redirect: (context, state) {
-      final isAuthenticated = authState.valueOrNull != null;
-      final isLoading = authState.isLoading;
-      if (isLoading) return null;
+    return GoRouter(
+      initialLocation: '/deliveries',
+      debugLogDiagnostics: true, // Enable debug to see what's happening
+      redirect: (context, state) {
+        try {
+          final isAuthenticated = authState.valueOrNull != null;
+          final isLoading = authState.isLoading;
+          
+          print('🔄 Router redirect - isAuth: $isAuthenticated, isLoading: $isLoading, location: ${state.matchedLocation}');
+          
+          if (isLoading) return null;
 
-      final isAuthRoute = state.matchedLocation.startsWith('/login') ||
-          state.matchedLocation.startsWith('/register') ||
-          state.matchedLocation.startsWith('/forgot-password');
+          final isAuthRoute = state.matchedLocation.startsWith('/login') ||
+              state.matchedLocation.startsWith('/register') ||
+              state.matchedLocation.startsWith('/forgot-password');
 
-      if (!isAuthenticated && !isAuthRoute) return '/login';
-      if (isAuthenticated && isAuthRoute) return '/deliveries';
-      return null;
-    },
+          if (!isAuthenticated && !isAuthRoute) {
+            print('➡️ Redirecting to login');
+            return '/login';
+          }
+          if (isAuthenticated && isAuthRoute) {
+            print('➡️ Redirecting to deliveries');
+            return '/deliveries';
+          }
+          return null;
+        } catch (error) {
+          print('❌ Router redirect error: $error');
+          return null; // Stay on current route
+        }
+      },
     routes: [
       // Auth routes
       GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),

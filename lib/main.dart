@@ -8,11 +8,25 @@ import 'core/theme/app_theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Supabase.initialize(
-    url: SupabaseConfig.supabaseUrl,
-    anonKey: SupabaseConfig.supabaseAnonKey,
-    debug: false,
-  );
+  try {
+    print('🚀 Initializing Supabase...');
+    print('URL: ${SupabaseConfig.supabaseUrl}');
+    print('Key: ${SupabaseConfig.supabaseAnonKey.substring(0, 20)}...');
+    
+    await Supabase.initialize(
+      url: SupabaseConfig.supabaseUrl,
+      anonKey: SupabaseConfig.supabaseAnonKey,
+      debug: true,
+    );
+    
+    print('✅ Supabase initialized successfully');
+  } catch (error, stackTrace) {
+    print('❌ Supabase initialization failed: $error');
+    print('Stack trace: $stackTrace');
+    
+    // Continue anyway - let the app start without Supabase
+    print('🔄 Continuing without Supabase...');
+  }
 
   runApp(
     const ProviderScope(
