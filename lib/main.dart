@@ -8,11 +8,12 @@ import 'core/theme/app_theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Supabase.initialize(
-    url: SupabaseConfig.supabaseUrl,
-    anonKey: SupabaseConfig.supabaseAnonKey,
-    debug: false,
-  );
+  // TEMP: Disable Supabase init to debug NPE
+  // await Supabase.initialize(
+  //   url: SupabaseConfig.supabaseUrl,
+  //   anonKey: SupabaseConfig.supabaseAnonKey,
+  //   debug: false,
+  // );
 
   runApp(
     const ProviderScope(
