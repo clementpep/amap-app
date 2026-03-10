@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../data/price_repository.dart';
 import '../models/price_comparison_result.dart';
+import '../../delivery/models/delivery.dart';
 import '../../delivery/providers/delivery_provider.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/common_widgets.dart';
