@@ -24,24 +24,22 @@ part 'app_router.g.dart';
 
 @riverpod
 GoRouter appRouter(Ref ref) {
-  // TEMP: Disable auth for debugging NPE
-  // final authState = ref.watch(authStateProvider);
+  final authState = ref.watch(authStateProvider);
 
   return GoRouter(
     initialLocation: '/deliveries',
     debugLogDiagnostics: false,
     redirect: (context, state) {
-      // TEMP: Skip auth redirect to debug the NPE issue
-      // final isAuthenticated = authState.valueOrNull != null;
-      // final isLoading = authState.isLoading;
-      // if (isLoading) return null;
+      final isAuthenticated = authState.valueOrNull != null;
+      final isLoading = authState.isLoading;
+      if (isLoading) return null;
 
-      // final isAuthRoute = state.matchedLocation.startsWith('/login') ||
-      //     state.matchedLocation.startsWith('/register') ||
-      //     state.matchedLocation.startsWith('/forgot-password');
+      final isAuthRoute = state.matchedLocation.startsWith('/login') ||
+          state.matchedLocation.startsWith('/register') ||
+          state.matchedLocation.startsWith('/forgot-password');
 
-      // if (!isAuthenticated && !isAuthRoute) return '/login';
-      // if (isAuthenticated && isAuthRoute) return '/deliveries';
+      if (!isAuthenticated && !isAuthRoute) return '/login';
+      if (isAuthenticated && isAuthRoute) return '/deliveries';
       return null;
     },
     routes: [
