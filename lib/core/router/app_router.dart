@@ -24,10 +24,9 @@ part 'app_router.g.dart';
 
 @riverpod
 GoRouter appRouter(Ref ref) {
-  try {
-    final authState = ref.watch(authStateProvider);
+  final authState = ref.watch(authStateProvider);
 
-    return GoRouter(
+  return GoRouter(
       initialLocation: '/deliveries',
       debugLogDiagnostics: true, // Enable debug to see what's happening
       redirect: (context, state) {
