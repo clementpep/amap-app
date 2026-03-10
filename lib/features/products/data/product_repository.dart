@@ -28,7 +28,9 @@ class ProductRepository {
         .textSearch('name', query, config: 'french')
         .limit(20);
 
-    return (rows as List).map(_parseProduct).toList();
+    return (rows as List)
+        .map((row) => _parseProduct(row as Map<String, dynamic>))
+        .toList();
   }
 
   /// Search Open Food Facts and cache results in Supabase

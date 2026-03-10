@@ -48,7 +48,9 @@ class PriceRepository {
         .eq('id', deliveryId)
         .single();
 
-    final basketItems = (deliveryRow['basket_items'] as List?) ?? [];
+    final basketItems = (deliveryRow['basket_items'] as List?)
+            ?.cast<Map<String, dynamic>>() ??
+        <Map<String, dynamic>>[];
     final results = <PriceComparisonResult>[];
 
     for (final item in basketItems) {
@@ -74,7 +76,7 @@ class PriceRepository {
             .limit(10);
 
         final now = DateTime.now();
-        for (final p in (prices as List)) {
+        for (final p in (prices as List).cast<Map<String, dynamic>>()) {
           final recordedAt = DateTime.parse(p['recorded_at'] as String);
           final isStale = now.difference(recordedAt).inDays > 30;
           final priceType = p['price_type'] as String;
@@ -169,13 +171,16 @@ class PriceRepository {
         .gte('recorded_at', since.toIso8601String())
         .order('recorded_at', ascending: true);
 
-    return (rows as List).map((row) => PriceHistory(
-      productId: productId,
-      priceType: row['price_type'] as String,
-      price: (row['price'] as num).toDouble(),
-      unit: row['unit'] as String,
-      source: row['source'] as String,
-      recordedAt: DateTime.parse(row['recorded_at'] as String),
-    )).toList();
+    return (rows as List).map((dynamic r) {
+      final row = r as Map<String, dynamic>;
+      return PriceHistory(
+        productId: productId,
+        priceType: row['price_type'] as String,
+        price: (row['price'] as num).toDouble(),
+        unit: row['unit'] as String,
+        source: row['source'] as String,
+        recordedAt: DateTime.parse(row['recorded_at'] as String),
+      );
+    }).toList();
   }
 }

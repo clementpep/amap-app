@@ -55,7 +55,7 @@ class AnalyticsRepository {
         .not('total_bio_price', 'is', null)
         .order('delivered_at', ascending: true);
 
-    final rows = (deliveries as List);
+    final rows = (deliveries as List).cast<Map<String, dynamic>>();
 
     if (rows.isEmpty) {
       return StatsSummary(
@@ -172,7 +172,7 @@ class AnalyticsRepository {
           .gte('created_at', since.toIso8601String());
 
       final categories = <String, int>{};
-      for (final item in (items as List)) {
+      for (final item in (items as List).cast<Map<String, dynamic>>()) {
         final product = item['products'] as Map<String, dynamic>?;
         final cat = product?['category'] as String? ?? 'Autre';
         categories[cat] = (categories[cat] ?? 0) + 1;

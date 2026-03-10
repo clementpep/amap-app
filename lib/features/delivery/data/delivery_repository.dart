@@ -64,10 +64,13 @@ class DeliveryRepository {
         .order('delivered_at', ascending: false)
         .range(offset, offset + limit - 1);
 
-    return (rows as List).map((row) {
-      final itemRows = (row['basket_items'] as List?) ?? [];
-      final items = itemRows.map((i) => _parseBasketItem(i)).toList();
-      return _parseDelivery(row, items);
+    return (rows as List).map((dynamic row) {
+      final r = row as Map<String, dynamic>;
+      final itemRows = (r['basket_items'] as List?) ?? [];
+      final items = itemRows
+          .map((i) => _parseBasketItem(i as Map<String, dynamic>))
+          .toList();
+      return _parseDelivery(r, items);
     }).toList();
   }
 
@@ -82,7 +85,9 @@ class DeliveryRepository {
 
     if (row == null) return null;
     final itemRows = (row['basket_items'] as List?) ?? [];
-    final items = itemRows.map((i) => _parseBasketItem(i)).toList();
+    final items = itemRows
+        .map((i) => _parseBasketItem(i as Map<String, dynamic>))
+        .toList();
     return _parseDelivery(row, items);
   }
 
