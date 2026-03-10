@@ -1,0 +1,28 @@
+targets:
+  $default:
+    builders:
+      freezed:
+        generate_for:
+          include:
+            - lib/features/delivery/models/*.dart
+            - lib/features/products/models/*.dart
+            - lib/features/price_comparison/models/*.dart
+            - lib/features/analytics/models/*.dart
+
+      json_serializable:
+        generate_for:
+          include:
+            - lib/features/delivery/models/*.dart
+            - lib/features/products/models/*.dart
+            - lib/features/price_comparison/models/*.dart
+            - lib/features/analytics/models/*.dart
+
+      riverpod_generator:
+        generate_for:
+          include:
+            - lib/**/*.dart
+
+      drift_dev:
+        generate_for:
+          include:
+            - lib/**/*.dart

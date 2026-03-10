@@ -1,0 +1,33 @@
+# Build outputs
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Dependencies (re-fetched during Docker build)
+.pub-cache/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets — never bake into image via COPY
+.env
+.env.local
+lib/core/config/secrets.dart
+
+# Tests (not needed in production image)
+test/
+integration_test/
+
+# CI
+.github/
+
+# Git
+.git/
+.gitignore
