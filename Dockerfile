@@ -12,6 +12,18 @@ RUN flutter pub get
 # Copy source
 COPY . .
 
+# Download Poppins font files (not committed to git — binary assets)
+# Source: Google Fonts open-source repository (OFL license)
+RUN mkdir -p assets/fonts && \
+    curl -fsSL -o assets/fonts/Poppins-Regular.ttf \
+      "https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-Regular.ttf" && \
+    curl -fsSL -o assets/fonts/Poppins-Medium.ttf \
+      "https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-Medium.ttf" && \
+    curl -fsSL -o assets/fonts/Poppins-SemiBold.ttf \
+      "https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-SemiBold.ttf" && \
+    curl -fsSL -o assets/fonts/Poppins-Bold.ttf \
+      "https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-Bold.ttf"
+
 # Enable web platform support (idempotent: won't overwrite existing files)
 # Required because the repo doesn't include generated web/ binary assets
 RUN flutter create . --platforms web --project-name amap_app
