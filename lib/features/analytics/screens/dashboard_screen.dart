@@ -51,7 +51,7 @@ class DashboardScreen extends ConsumerWidget {
             itemCount: 4,
             itemBuilder: (_, __) => const ShimmerCard(height: 200),
           ),
-          error: (e, _) => ErrorWidget(
+          error: (e, _) => AppErrorWidget(
             message: 'Impossible de charger les statistiques.',
             onRetry: () => ref.invalidate(_summaryProvider),
           ),

@@ -21,7 +21,7 @@ class PriceHistoryScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Historique des prix')),
       body: historyAsync.when(
         loading: () => const LoadingWidget(),
-        error: (e, _) => const ErrorWidget(message: 'Impossible de charger l\'historique.'),
+        error: (e, _) => const AppErrorWidget(message: 'Impossible de charger l\'historique.'),
         data: (history) {
           if (history.isEmpty) {
             return const EmptyStateWidget(

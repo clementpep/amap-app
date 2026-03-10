@@ -34,7 +34,7 @@ class _DeliveryPickerScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Comparer les prix')),
       body: deliveriesAsync.when(
         loading: () => const LoadingWidget(),
-        error: (e, _) => const ErrorWidget(message: 'Impossible de charger les livraisons.'),
+        error: (e, _) => const AppErrorWidget(message: 'Impossible de charger les livraisons.'),
         data: (deliveries) {
           if (deliveries.isEmpty) {
             return const EmptyStateWidget(
@@ -92,7 +92,7 @@ class _ComparisonDetailScreen extends ConsumerWidget {
       ),
       body: comparisonAsync.when(
         loading: () => const LoadingWidget(message: 'Calcul des prix...'),
-        error: (e, _) => ErrorWidget(
+        error: (e, _) => AppErrorWidget(
           message: 'Impossible de calculer la comparaison.',
           onRetry: () => ref.invalidate(_comparisonProvider(deliveryId)),
         ),

@@ -53,11 +53,11 @@ class ShimmerCard extends StatelessWidget {
 }
 
 /// Full-screen error with retry button
-class ErrorWidget extends StatelessWidget {
+class AppErrorWidget extends StatelessWidget {
   final String message;
   final VoidCallback? onRetry;
 
-  const ErrorWidget({super.key, required this.message, this.onRetry});
+  const AppErrorWidget({super.key, required this.message, this.onRetry});
 
   @override
   Widget build(BuildContext context) {

@@ -38,7 +38,7 @@ class DeliveryListScreen extends ConsumerWidget {
             itemCount: 5,
             itemBuilder: (_, __) => const ShimmerCard(height: 100),
           ),
-          error: (e, _) => ErrorWidget(
+          error: (e, _) => AppErrorWidget(
             message: 'Impossible de charger les livraisons.',
             onRetry: () => ref.invalidate(deliveryListProvider),
           ),

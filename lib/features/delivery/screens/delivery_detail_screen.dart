@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import '../models/delivery.dart';
 import '../providers/delivery_provider.dart';
 import '../../../core/widgets/common_widgets.dart';
 import '../../../core/theme/app_theme.dart';
@@ -50,10 +51,10 @@ class DeliveryDetailScreen extends ConsumerWidget {
       ),
       body: deliveryAsync.when(
         loading: () => const LoadingWidget(),
-        error: (e, _) => ErrorWidget(message: 'Livraison introuvable.'),
+        error: (e, _) => AppErrorWidget(message: 'Livraison introuvable.'),
         data: (delivery) {
           if (delivery == null) {
-            return const ErrorWidget(message: 'Livraison introuvable.');
+            return const AppErrorWidget(message: 'Livraison introuvable.');
           }
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),

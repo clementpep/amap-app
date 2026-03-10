@@ -20,9 +20,9 @@ class ProductDetailScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Détail produit')),
       body: productAsync.when(
         loading: () => const LoadingWidget(),
-        error: (e, _) => const ErrorWidget(message: 'Produit introuvable.'),
+        error: (e, _) => const AppErrorWidget(message: 'Produit introuvable.'),
         data: (product) {
-          if (product == null) return const ErrorWidget(message: 'Produit introuvable.');
+          if (product == null) return const AppErrorWidget(message: 'Produit introuvable.');
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(

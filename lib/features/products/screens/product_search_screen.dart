@@ -91,7 +91,7 @@ class _ProductSearchScreenState extends ConsumerState<ProductSearchScreen> {
                       itemCount: 5,
                       itemBuilder: (_, __) => const ShimmerCard(height: 80),
                     ),
-                    error: (e, _) => ErrorWidget(
+                    error: (e, _) => AppErrorWidget(
                       message: 'Erreur lors de la recherche.',
                       onRetry: () => ref.invalidate(_searchResultsProvider),
                     ),

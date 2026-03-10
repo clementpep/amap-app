@@ -151,7 +151,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen> {
             child: _isInitializing
                 ? const LoadingWidget(message: 'Initialisation caméra...')
                 : _error != null
-                    ? ErrorWidget(
+                    ? AppErrorWidget(
                         message: _error!,
                         onRetry: () {
                           setState(() {
