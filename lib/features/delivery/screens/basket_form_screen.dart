@@ -88,7 +88,10 @@ class _BasketFormScreenState extends ConsumerState<BasketFormScreen> {
       String? photoUrl;
       if (widget.imagePath != null) {
         final client = Supabase.instance.client;
-        final userId = client.auth.currentUser!.id;
+        final userId = client.auth.currentUser?.id;
+        if (userId == null) {
+          throw Exception('User not authenticated');
+        }
         final fileName = '$userId/${_deliveredAt.millisecondsSinceEpoch}.jpg';
         final bytes = await File(widget.imagePath!).readAsBytes();
         await client.storage

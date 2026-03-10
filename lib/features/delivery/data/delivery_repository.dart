@@ -14,7 +14,7 @@ class DeliveryRepository {
   final SupabaseClient _client;
   DeliveryRepository(this._client);
 
-  String get _userId => _client.auth.currentUser!.id;
+  String? get _userId => _client.auth.currentUser?.id;
 
   /// Create a new delivery and its items. Returns the created delivery.
   Future<Delivery> createDelivery({
@@ -25,9 +25,14 @@ class DeliveryRepository {
     double? totalBioPrice,
     double? totalConvPrice,
   }) async {
+    final userId = _userId;
+    if (userId == null) {
+      throw Exception('User not authenticated');
+    }
+    
     // 1. Insert delivery
     final deliveryData = await _client.from('deliveries').insert({
-      'user_id': _userId,
+      'user_id': userId,
       'delivered_at': deliveredAt.toIso8601String().split('T')[0],
       'photo_url': photoUrl,
       'notes': notes,
@@ -57,10 +62,15 @@ class DeliveryRepository {
 
   /// Fetch paginated deliveries for current user, with items
   Future<List<Delivery>> getDeliveries({int limit = 20, int offset = 0}) async {
+    final userId = _userId;
+    if (userId == null) {
+      throw Exception('User not authenticated');
+    }
+    
     final rows = await _client
         .from('deliveries')
         .select('*, basket_items(*)')
-        .eq('user_id', _userId)
+        .eq('user_id', userId)
         .order('delivered_at', ascending: false)
         .range(offset, offset + limit - 1);
 
@@ -76,11 +86,16 @@ class DeliveryRepository {
 
   /// Fetch a single delivery with items
   Future<Delivery?> getDelivery(String deliveryId) async {
+    final userId = _userId;
+    if (userId == null) {
+      throw Exception('User not authenticated');
+    }
+    
     final row = await _client
         .from('deliveries')
         .select('*, basket_items(*)')
         .eq('id', deliveryId)
-        .eq('user_id', _userId)
+        .eq('user_id', userId)
         .maybeSingle();
 
     if (row == null) return null;
@@ -99,6 +114,11 @@ class DeliveryRepository {
     double? totalBioPrice,
     double? totalConvPrice,
   }) async {
+    final userId = _userId;
+    if (userId == null) {
+      throw Exception('User not authenticated');
+    }
+    
     final updates = <String, dynamic>{'updated_at': DateTime.now().toIso8601String()};
     if (deliveredAt != null) {
       updates['delivered_at'] = deliveredAt.toIso8601String().split('T')[0];
@@ -112,7 +132,7 @@ class DeliveryRepository {
         .from('deliveries')
         .update(updates)
         .eq('id', deliveryId)
-        .eq('user_id', _userId);
+        .eq('user_id', userId);
   }
 
   /// Replace all items for a delivery
@@ -141,11 +161,16 @@ class DeliveryRepository {
 
   /// Delete a delivery (cascade deletes items via FK)
   Future<void> deleteDelivery(String deliveryId) async {
+    final userId = _userId;
+    if (userId == null) {
+      throw Exception('User not authenticated');
+    }
+    
     await _client
         .from('deliveries')
         .delete()
         .eq('id', deliveryId)
-        .eq('user_id', _userId);
+        .eq('user_id', userId);
   }
 
   // ─── Parsers ─────────────────────────────────────────────

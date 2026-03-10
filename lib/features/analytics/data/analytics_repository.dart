@@ -40,9 +40,14 @@ class AnalyticsRepository {
   final SupabaseClient _client;
   AnalyticsRepository(this._client);
 
-  String get _userId => _client.auth.currentUser!.id;
+  String? get _userId => _client.auth.currentUser?.id;
 
   Future<StatsSummary> getSummary(StatsPeriod period) async {
+    final userId = _userId;
+    if (userId == null) {
+      throw Exception('User not authenticated');
+    }
+    
     final since = period.since;
     final sinceStr = since.toIso8601String().split('T')[0];
 
@@ -50,7 +55,7 @@ class AnalyticsRepository {
     final deliveries = await _client
         .from('deliveries')
         .select('id, delivered_at, total_bio_price, total_conv_price')
-        .eq('user_id', _userId)
+        .eq('user_id', userId)
         .gte('delivered_at', sinceStr)
         .not('total_bio_price', 'is', null)
         .order('delivered_at', ascending: true);
