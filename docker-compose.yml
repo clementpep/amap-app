@@ -9,8 +9,8 @@ services:
         SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
     image: amap-web:latest
     restart: unless-stopped
-    ports:
-      - "3000:80"
+    # No host port binding — Traefik routes traffic via Docker network
+    # using the labels below. This avoids port conflicts on the host.
     labels:
       # Dokploy / Traefik routing — update HOST to your actual domain
       - "traefik.enable=true"
