@@ -16,6 +16,10 @@ COPY . .
 # Required because the repo doesn't include generated web/ binary assets
 RUN flutter create . --platforms web --project-name amap_app
 
+# Generate code: Freezed, Riverpod, json_serializable, GoRouter
+# This produces all *.g.dart and *.freezed.dart files at build time
+RUN dart run build_runner build --delete-conflicting-outputs
+
 # Build-time secrets injected as Docker build args
 ARG SUPABASE_URL
 ARG SUPABASE_ANON_KEY
